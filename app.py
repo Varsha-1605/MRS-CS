@@ -1,10 +1,6 @@
 import streamlit as st
+import compress_pickle
 
-import pickle
-
-
-# def fetch_posters(moive_id):
-#     pass
 
 
 def recommend(movie):
@@ -15,26 +11,20 @@ def recommend(movie):
     recommended_movies = []
 
     for i in movies_list:
-        # movie_id = i[1]
-        # fetch_posters(movie_id)
         recommended_movies.append(movies.iloc[i[0]].title)
-        # print(movies.iloc[i[0]].title)
     return recommended_movies
 
-with open("model.pkl", "rb") as f:
-    movies = pickle.load(f)
 
-with open("similarity.pkl", "rb") as f:
-    similarity = pickle.load(f)
+
+movies = compress_pickle.load("model.pkl.gz", compression="gzip")
+similarity = compress_pickle.load("similarity.pkl.gz", compression="gzip")
+
 
 st.title("Movie Recommender System")
-
 movies_list = movies['title'].values
-
-
-
 selected_movie_name = st.selectbox("Select a movie", 
                       movies_list)
+
 
 if st.button('Recommend'):
     st.write("You have selected: ", selected_movie_name)
